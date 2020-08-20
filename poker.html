@@ -5,10 +5,17 @@
   <meta charset="utf-8" />
   
   <style>
-	body {		
+	body {
+		margin: 0px;
+	}
+  
+	.table {
+		height: 1000px;
 		background-image: url('pokerTable.webp');
 		background-repeat: no-repeat;
-		background-position: center 0%;
+		background-size: 100%;
+		background-position: 0% 40%;
+		position: relative;
 	}
 	
 	.inline {
@@ -53,16 +60,145 @@
 		color: #98FB98;
 	}
 	
+	#p1 {
+		position: absolute;
+		left: 800px;
+		top: 900px;
+	}
+	
+	#p2 {
+		position: absolute;
+		left: 250px;
+		top: 800px;
+	}
+	
+	#p3 {
+		position: absolute;
+		left: 1350px;
+		top: 800px;
+	}
+	
+	#p4 {
+		position: absolute;
+		left: 30px;
+		top: 450px;
+	}
+	
+	#p5 {
+		position: absolute;
+		left: 1600px;
+		top: 450px;
+	}
+	
+	#p6 {
+		position: absolute;
+		left: 100px;
+		top: 150px;
+	}
+	
+	#p7 {
+		position: absolute;
+		left: 1500px;
+		top: 150px;
+	}
+	
+	#p8 {
+		position: absolute;
+		left: 500px;
+		top: 0px;
+	}
+	
+	#p9 {
+		position: absolute;
+		left: 1100px;
+		top: 0px;
+	}
+	
+	button {
+		width: 200px;
+		height: 50px;
+	}
+	
   </style>
 </head>
 
 <body>
-  <div class="player">
-	<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
-	<div class="information">
-		<div class="nickname">haechiisababodevloper</div>
-		<div class="haveChips">3000</div>
+	<div class="table">
+	  <div class="player" id="p1">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">해치</div>
+			<div class="haveChips">3000</div>
+		</div>
+	  </div>
+	  
+	  <div class="player" id="p2">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">우주하마</div>
+			<div class="haveChips">13000</div>
+		</div>
+	  </div>
+	  
+	  <div class="player" id="p3">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">해도리</div>
+			<div class="haveChips">9000</div>
+		</div>
+	  </div>
+	  
+	  <div class="player" id="p4">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">PS</div>
+			<div class="haveChips">11000</div>
+		</div>
+	  </div>
+	  <div class="player" id="p5">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">김홍주</div>
+			<div class="haveChips">14000</div>
+		</div>
+	  </div>
+	  
+	  <div class="player" id="p6">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">내계정을눌러라</div>
+			<div class="haveChips">20000</div>
+		</div>
+	  </div>
+	  
+	  <div class="player" id="p7">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">장삐주</div>
+			<div class="haveChips">30000</div>
+		</div>
+	  </div>
+	  <div class="player" id="p8">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">괴물쥐</div>
+			<div class="haveChips">18000</div>
+		</div>
+	  </div>
+	  
+	  <div class="player" id="p9">
+		<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div class="information">
+			<div class="nickname">고춘이</div>
+			<div class="haveChips">43000</div>
+		</div>
+	  </div>
 	</div>
-  </div>
+	
+	<div class="controls">
+		<button>폴드</button>
+		<button>콜</button>
+		<button>레이즈</button>
+	</div>
 </body>
 </html>
