@@ -11,23 +11,42 @@
 		background-position: center 0%;
 	}
 	
-	.player {
+	.inline {
 		display: inline;
 	}
 	
+	.player {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		height: 100px;
+		width: 300px;
+		background-color: #000;
+		border: 3px solid #bebebe;
+		border-radius: 5px;
+	}
+	
 	.profilePhoto {
-		
+		display: inline-flex;
+		border-right: 3px solid #bebebe;
+	}
+	
+	.information {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin-left: 35px;
 	}
 	
 	.nickname {
-		
+		font-size: 40px;
+		color: #fff;
 	}
 	
 	.haveChips {
-	
-	}
-	
-	.haveCards {
+		font-size: 20px;
+		color: #98FB98;
 	}
 	
   </style>
@@ -35,10 +54,11 @@
 
 <body>
   <div class="player">
-	<div class="profilePhoto"><div>
-	<div class="nickname"></div>
-	<div class="haveChips"></div>
-	<div class="haveCards"></div>
+	<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+	<div class="information">
+		<div class="nickname">haechi</div>
+		<div class="haveChips">3000</div>
+	</div>
   </div>
 </body>
 </html>
