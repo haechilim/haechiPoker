@@ -63,7 +63,7 @@
 	#p1 {
 		position: absolute;
 		left: 800px;
-		top: 900px;
+		top: 850px;
 	}
 	
 	#p2 {
@@ -114,9 +114,62 @@
 		top: 0px;
 	}
 	
-	button {
+	.button {
+		width: 200px;
+		height: 90px;
+		background-color: #FF5050;
+		font-size: 30px;
+		font-weight: bold;
+		color: #fff;
+		border: 3px solid #FF5050;
+		border-radius: 15px;
+	}
+	
+	.controls{
+		display: flex;
+		background-color: #4a7e3c;
+		justify-content: space-around;
+		align-items: center;
+	}
+	
+	input {
 		width: 200px;
 		height: 50px;
+		background-color: #464646;
+		border: 2px solid #464646;
+		color: #fff;
+		font-size:40px;
+		border-radius: 10px;
+	}
+	
+	.control {
+		display: flex;
+		width: 600px;
+		height: 90px;
+		background-color: #FF5050;
+		font-size: 30px;
+		font-weight: bold;
+		color: #fff;
+		border: 3px solid #FF5050;
+		border-radius: 10px;
+		justify-content: space-around;
+		align-items: center;
+	}
+	
+	.betting {
+		width: 70px;
+		height: 50px;
+		background-color: #C73DA3;
+		font-weight: bold;
+		color: #fff;
+		border: 3px solid #C73DA3;
+		border-radius: 5px;
+	}
+	
+	.sempleButton {
+		display: flex;
+		width: 630px;
+		justify-content: space-around;
 	}
 	
   </style>
@@ -196,9 +249,19 @@
 	</div>
 	
 	<div class="controls">
-		<button>폴드</button>
-		<button>콜</button>
-		<button>레이즈</button>
+		<div class="sempleButton">
+			<button class="button">Fold</button>
+			<button class="button">Call</button>
+			<button class="button">Raise To</button>
+		</div>
+		
+		<div class="control">
+			<input type="number">
+			<button class="betting">1/2</button>
+			<button class="betting">Pot</button>
+			<button class="betting">min</button>
+			<button class="betting">max</button>
+		</div>
 	</div>
 </body>
 </html>
