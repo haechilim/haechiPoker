@@ -263,6 +263,13 @@ input {
 	position: absolute;
 }
 
+.chip-container {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	position: absolute;
+}
+
 .chip-container .image {
 	display: inline-flex;
 	width: 50px;
@@ -275,6 +282,38 @@ input {
 	margin-left: 10px;
 	color: #fff;
 	font-size: 20px;
+}
+
+.chip-container-position {
+	top: 550px;
+	left: 850px;
+}
+
+.total-chip-count {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: 80px;
+	color: #fff;
+	font-size: 20px;
+}
+
+.first-chip {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.second-chip {
+	position: absolute;
+	top: -5px;
+	left: -5px;
+}
+
+.third-chip {
+	position: absolute;
+	top: -10px;
+	left: -10px;
 }
 
 .pot {
