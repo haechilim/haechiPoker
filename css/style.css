@@ -20,16 +20,18 @@ body {
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-	height: 100px;
-	width: 300px;
+	height: 70px;
+	width: 280px;
 	background-color: #000;
 	border: 3px solid #bebebe;
-	border-radius: 5px;
+	border-radius: 100px;
 }
 
 .avatar {
 	display: inline-flex;
 	border-right: 3px solid #bebebe;
+	border-radius: 100px;
+	margin-left: -5px;
 }
 
 .information {
@@ -37,7 +39,7 @@ body {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin-left: 35px;
+	margin-left: 10px;
 }
 
 .nickname {
@@ -47,6 +49,25 @@ body {
 	text-overflow: ellipsis;
 	text-align: center;
 	color: #fff;
+}
+
+.timer {
+	position: absolute;
+	left: 82px;
+	top: 75px;
+	width: 170px;
+	height: 20px;
+	border-right: 3px solid #bebebe;
+	border-left: 3px solid #bebebe;
+	border-bottom: 3px solid #bebebe;
+	border-radius: 0px 0px 10px 10px;
+}
+
+.timer-bar {
+	width: 170px;
+	height: 20px;
+	background-color: #8CF064;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .chips {
@@ -104,12 +125,12 @@ body {
 }
 
 .left-top {
-	left: -40px;
+	left: -50px;
 	top: -70px;
 }
 
 .right-top {
-	left: 250px;
+	left: 320px;
 	top: -70px;
 }
 
@@ -138,21 +159,15 @@ body {
 	top: 120px;
 }
 
-.right {
+.center {
 	position: absolute;
-	left: 90px;
-	top: -80px;
-}
-
-.left {
-	position: absolute;
-	left: 10px;
+	left: 60px;
 	top: -80px;
 }
 
 .right-of-card {
 	position: absolute;
-	left: 320px;
+	left: 300px;
 	top: -40px;
 }
 
