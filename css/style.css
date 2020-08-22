@@ -19,18 +19,15 @@ body {
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-	height: 70px;
+	height: 80px;
 	width: 280px;
-	background-color: #000;
-	border: 3px solid #bebebe;
-	border-radius: 100px;
 }
 
 .avatar {
 	display: inline-flex;
-	border-right: 3px solid #bebebe;
+	border: 2px solid #d1d1d1;
 	border-radius: 100px;
-	margin-left: -5px;
+	margin-left: -8px;
 }
 
 .information {
@@ -51,24 +48,28 @@ body {
 }
 
 .timer {
-	z-index: -1;
 	position: absolute;
 	left: 69px;
-	top: 75px;
+	top: 82px;
 	width: 170px;
-	height: 11px;
-	border-right: 2px solid #bebebe;
-	border-left: 2px solid #bebebe;
-	border-bottom: 2px solid #bebebe;
-	border-radius: 0px 0px 5px 5px;
+	height: 6px;
+	border-right: 1px solid #bebebe;
+	border-left: 1px solid #bebebe;
+	border-bottom: 1px solid #bebebe;
+	border-radius: 0px 0px 4px 4px;
 	background-color: #666;
 	overflow: hidden;
+	z-index: -1;
 }
 
 .timer .progress {
 	width: 170px;
-	height: 20px;
-	background-color: #69bd48;
+	height: 4px;
+	margin-top: 1px;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f0cb11), color-stop(1, #f2ab1e) );
+	background:-moz-linear-gradient( center top, #f0cb11 5%, #f2ab1e 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f0cb11', endColorstr='#f2ab1e');
+	background-color:#f0cb11;
 }
 
 .chips {
@@ -369,4 +370,37 @@ input {
 
 .dealerbutton {
 	width: 50px;
+}
+
+.person {
+	-moz-box-shadow:inset 0px 1px 0px 0px #9e9e9e;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #9e9e9e;
+	box-shadow:inset 0px 1px 0px 0px #9e9e9e;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #6b6b6b), color-stop(1, #000000) );
+	background:-moz-linear-gradient( center top, #6b6b6b 5%, #000000 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#6b6b6b', endColorstr='#000000');
+	background-color:#6b6b6b;
+	-webkit-border-top-left-radius:25px;
+	-moz-border-radius-topleft:25px;
+	border-top-left-radius:25px;
+	-webkit-border-top-right-radius:25px;
+	-moz-border-radius-topright:25px;
+	border-top-right-radius:25px;
+	-webkit-border-bottom-right-radius:25px;
+	-moz-border-radius-bottomright:25px;
+	border-bottom-right-radius:25px;
+	-webkit-border-bottom-left-radius:25px;
+	-moz-border-radius-bottomleft:25px;
+	border-bottom-left-radius:25px;
+	text-indent:0;
+	border:1px solid #d1d1d1;
+	color:#e6e6e6;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	line-height:25px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:0px 1px 0px #333333;
 }
