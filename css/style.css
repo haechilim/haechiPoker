@@ -3,6 +3,7 @@ body {
 }
 
 .table {
+	z-index: -2;
 	height: 1000px;
 	background-image: url('../image/table_large.png');
 	background-repeat: no-repeat;
@@ -64,12 +65,12 @@ body {
 
 .seat7 {
 	left: 250px;
-	top: 800px;
+	top: 750px;
 }
 
 .seat5 {
 	left: 1350px;
-	top: 800px;
+	top: 750px;
 }
 
 .seat9 {
@@ -94,20 +95,21 @@ body {
 
 .seat11 {
 	left: 500px;
-	top: 50px;
+	top: 90px;
 }
 
 .seat1 {
 	left: 1100px;
-	top: 50px;
+	top: 90px;
 }
 
 .left-top {
+	left: -40px;
 	top: -70px;
 }
 
 .right-top {
-	left: 200px;
+	left: 250px;
 	top: -70px;
 }
 
@@ -134,6 +136,66 @@ body {
 .center-bottom {
 	left: 120px;
 	top: 120px;
+}
+
+.right {
+	position: absolute;
+	left: 90px;
+	top: -80px;
+}
+
+.left {
+	position: absolute;
+	left: 10px;
+	top: -80px;
+}
+
+.right-of-card {
+	position: absolute;
+	left: 320px;
+	top: -40px;
+}
+
+.right-of-nickname {
+	position: absolute;
+	left: 320px;
+	top: 0px;
+}
+
+.right-center-of-nickname {
+	position: absolute;
+	left: 320px;
+	top: 40px;
+}
+
+.left-of-nickname {
+	position: absolute;
+	left: -70px;
+	top: 0px;
+}
+
+.left-of-card {
+	position: absolute;
+	left: 0px;
+	top: -60px;
+}
+
+.left-center-of-nickname {
+	position: absolute;
+	left: -70px;
+	top: 50px;
+}
+
+.right-bottom-of-nickname {
+	position: absolute;
+	left: 320px;
+	top: 100px;
+}
+
+.left-bottom-of-nickname {
+	position: absolute;
+	left: -60px;
+	top: 100px;
 }
 
 .button {
@@ -241,6 +303,14 @@ input {
 	top: 0px;
 }
 	
-.cards-on-floor .image {
+.card {
 	width: 100px;
+}
+
+.holding-cards {
+	z-index: -1;
+}
+
+.dealerbutton {
+	width: 50px;
 }
