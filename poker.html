@@ -1,399 +1,150 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>해치 포커</title>
-  <meta charset="utf-8" />
-  
-  <style>
-	body {
-		margin: 0px;
-	}
-  
-	.table {
-		height: 1000px;
-		background-image: url('pokerTable.webp');
-		background-repeat: no-repeat;
-		background-size: 100%;
-		background-position: 0% 40%;
-		position: relative;
-	}
+	<title>해치 포커</title>
+	<meta charset="utf-8" />
 	
-	.inline {
-		display: inline;
-	}
-	
-	.player {
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		height: 100px;
-		width: 300px;
-		background-color: #000;
-		border: 3px solid #bebebe;
-		border-radius: 5px;
-	}
-	
-	.profilePhoto {
-		display: inline-flex;
-		border-right: 3px solid #bebebe;
-	}
-	
-	.information {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		margin-left: 35px;
-	}
-	
-	.nickname {
-		font-size: 20px;
-		width: 150px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		text-align: center;
-		color: #fff;
-	}
-	
-	.haveChips {
-		font-size: 20px;
-		color: #98FB98;
-	}
-	
-	#p1Contanier {
-		position: absolute;
-		left: 800px;
-		top: 850px;
-	}
-	
-	#p2Contanier {
-		position: absolute;
-		left: 250px;
-		top: 800px;
-	}
-	
-	#p3Contanier {
-		position: absolute;
-		left: 1350px;
-		top: 800px;
-	}
-	
-	#p4Contanier {
-		position: absolute;
-		left: 30px;
-		top: 450px;
-	}
-	
-	#p5Contanier {
-		position: absolute;
-		left: 1600px;
-		top: 450px;
-	}
-	
-	#p6Contanier {
-		position: absolute;
-		left: 100px;
-		top: 150px;
-	}
-	
-	#p7Contanier {
-		position: absolute;
-		left: 1500px;
-		top: 150px;
-	}
-	
-	#p8Contanier {
-		position: absolute;
-		left: 500px;
-		top: 0px;
-	}
-	
-	#p9Contanier {
-		position: absolute;
-		left: 1100px;
-		top: 0px;
-	}
-	
-	#p1Chip {
-		position: absolute;
-		top: -70px;
-	}
-	
-	#p2Chip {
-		position: absolute;
-		left: 200px;
-		top: -70px;
-	}
-	
-	#p3Chip {
-		position: absolute;
-		left: 0px;
-		top: -70px;
-	}
-	
-	#p4Chip {
-		position: absolute;
-		left: 330px;
-		top: 30px;
-	}
-	
-	#p5Chip {
-		position: absolute;
-		left: -130px;
-		top: 30px;
-	}
-	
-	#p6Chip {
-		position: absolute;
-		left: 250px;
-		top: 130px;
-	}
-	
-	#p7Chip {
-		position: absolute;
-		left: -70px;
-		top: 130px;
-	}
-	
-	#p8Chip {
-		position: absolute;
-		left: 120px;
-		top: 120px;
-	}
-	
-	#p9Chip {
-		position: absolute;
-		left: 120px;
-		top: 120px;
-	}
-	
-	.button {
-		width: 200px;
-		height: 90px;
-		background-color: #FF5050;
-		font-size: 30px;
-		font-weight: bold;
-		color: #fff;
-		border: 3px solid #FF5050;
-		border-radius: 15px;
-	}
-	
-	.controls{
-		display: flex;
-		background-color: #4a7e3c;
-		justify-content: space-around;
-		align-items: center;
-	}
-	
-	input {
-		width: 200px;
-		height: 50px;
-		background-color: #464646;
-		border: 2px solid #464646;
-		color: #fff;
-		font-size:40px;
-		border-radius: 10px;
-	}
-	
-	.control {
-		display: flex;
-		width: 600px;
-		height: 90px;
-		background-color: #FF5050;
-		font-size: 30px;
-		font-weight: bold;
-		color: #fff;
-		border: 3px solid #FF5050;
-		border-radius: 10px;
-		justify-content: space-around;
-		align-items: center;
-	}
-	
-	.betting {
-		width: 70px;
-		height: 50px;
-		background-color: #C73DA3;
-		font-weight: bold;
-		color: #fff;
-		border: 3px solid #C73DA3;
-		border-radius: 5px;
-	}
-	
-	.sempleButton {
-		display: flex;
-		width: 630px;
-		justify-content: space-around;
-	}
-	
-	.chipContainer {
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-	}
-	
-	.chip {
-		display: inline-flex;
-		width: 50px;
-	}
-	
-	.chipNumber {
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		margin-left: 10px;
-		color: #fff;
-		font-size: 20px;
-	}
-	
-	#pot {
-		font-weight: bold;
-		font-size: 30px;
-		position: absolute;
-		left: 870px;
-		top: 300px;
-	}
-	
-  </style>
+	<link rel="stylesheet" href="css\style.css">
 </head>
 
 <body>
 	<div class="table">
-		<div id="p1Contanier">
-		  <div class="player" id="p1">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p1" class="player-container seat6">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">해치</div>
-				<div class="haveChips">3000</div>
+				<div class="chips">3000</div>
 			</div>
 		  </div>
 		  
-		  <div class="chipContainer" id="p1Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">200</div>
+		  <div class="chip-container left-top">
+			<img class="image" src="image\chip.png">
+			<div class="count">200</div>
 		  </div>
 		</div>
 		
-		<div id="p2Contanier">
-		  <div class="player" id="p2">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p2" class="player-container seat7">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">우주하마</div>
-				<div class="haveChips">13000</div>
+				<div class="chips">13000</div>
 			</div>
 		  </div>
 		  
-		  <div class="chipContainer" id="p2Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">200</div>
+		  <div class="chip-container right-top">
+			<img class="image" src="image\chip.png">
+			<div class="count">200</div>
 		  </div>
 		</div>
 		
-		<div id="p3Contanier">
-		  <div class="player" id="p3">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p3" class="player-container seat5">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">해도리</div>
-				<div class="haveChips">9000</div>
+				<div class="chips">9000</div>
 			</div>
 		  </div>
 		  
-		  <div class="chipContainer" id="p3Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">200</div>
+		  <div class="chip-container left-top">
+			<img class="image" src="image\chip.png">
+			<div class="count">200</div>
 		  </div>
 		</div>
 
-		<div id="p4Contanier">
-		  <div class="player" id="p4">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p4" class="player-container seat9">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">PS</div>
-				<div class="haveChips">11000</div>
+				<div class="chips">11000</div>
 			</div>
 		  </div>
 		  
-		  <div class="chipContainer" id="p4Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">400</div>
+		  <div class="chip-container right-center">
+			<img class="image" src="image\chip.png">
+			<div class="count">400</div>
 		  </div>
 		</div>
 
-		<div id="p5Contanier">
-		  <div class="player" id="p5">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p5" class="player-container seat3">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">김홍주</div>
-				<div class="haveChips">14000</div>
+				<div class="chips">14000</div>
 			</div>
 		  </div>
 		  
-		  <div class="chipContainer" id="p5Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">1000</div>
+		  <div class="chip-container left-center">
+			<img class="image" src="image\chip.png">
+			<div class="count">1000</div>
 		  </div>
 		</div>
 		  
-		<div id="p6Contanier">
-		  <div class="player" id="p6">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p6" class="player-container seat10">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">내계정을눌러라</div>
-				<div class="haveChips">20000</div>
+				<div class="chips">20000</div>
 			</div>
 		  </div>
 		
-		  <div class="chipContainer" id="p6Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">1000</div>
+		  <div class="chip-container right-bottom">
+			<img class="image" src="image\chip.png">
+			<div class="count">1000</div>
 		  </div>
 		</div>
 		  
-		<div id="p7Contanier">
-			<div class="player" id="p7">
-				<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p7" class="player-container seat2">
+			<div class="player">
+				<img class="avatar" src="image\male.png" width="100px" height="100px">
 				<div class="information">
 					<div class="nickname">장삐주</div>
-					<div class="haveChips">30000</div>
+					<div class="chips">30000</div>
 				</div>
 			</div>
 		
-			<div class="chipContainer" id="p7Chip">
-				<img class="chip" src="chip.png">
-				<div class="chipNumber">1000</div>
+			<div class="chip-container left-bottom">
+				<img class="image" src="image\chip.png">
+				<div class="count">1000</div>
 			</div>
 		</div>
 
-		<div id="p8Contanier">
-		  <div class="player" id="p8">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p8" class="player-container seat11">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">괴물쥐</div>
-				<div class="haveChips">18000</div>
+				<div class="chips">18000</div>
 			</div>
 		  </div>
 		  
-		  <div class="chipContainer" id="p8Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">1000</div>
+		  <div class="chip-container center-bottom">
+			<img class="image" src="image\chip.png">
+			<div class="count">1000</div>
 		  </div>
 		</div>
 
-		<div id="p9Contanier">
-		  <div class="player" id="p9">
-			<img class="profilePhoto inline" src="male.png" width="100px" height="100px">
+		<div id="p9" class="player-container seat1">
+		  <div class="player">
+			<img class="avatar" src="image\male.png" width="100px" height="100px">
 			<div class="information">
 				<div class="nickname">고춘이</div>
-				<div class="haveChips">43000</div>
+				<div class="chips">43000</div>
 			</div>
 		  </div>
 		  
-		  <div class="chipContainer" id="p9Chip">
-			<img class="chip" src="chip.png">
-			<div class="chipNumber">1000</div>
+		  <div class="chip-container center-bottom">
+			<img class="image" src="image\chip.png">
+			<div class="count">1000</div>
 		  </div>
 		</div>
 	  
-	  <div id="pot">POT: 6000</div>
+	  <div class="pot" id="pot">POT: 6000</div>
 	</div>
 	
 	<div class="controls">

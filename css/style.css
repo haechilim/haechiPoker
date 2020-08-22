@@ -1,0 +1,225 @@
+body {
+	margin: 0px;
+}
+
+.table {
+	height: 1000px;
+	background-image: url('../image/table_large.png');
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-position: 0% 60%;
+	position: relative;
+}
+
+.inline {
+	display: inline;
+}
+
+.player {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	height: 100px;
+	width: 300px;
+	background-color: #000;
+	border: 3px solid #bebebe;
+	border-radius: 5px;
+}
+
+.avatar {
+	display: inline-flex;
+	border-right: 3px solid #bebebe;
+}
+
+.information {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-left: 35px;
+}
+
+.nickname {
+	font-size: 20px;
+	width: 150px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: center;
+	color: #fff;
+}
+
+.chips {
+	font-size: 20px;
+	color: #98FB98;
+}
+
+.player-container {
+	position: absolute;
+}
+
+.seat6 {
+	left: 800px;
+	top: 800px;
+}
+
+.seat7 {
+	left: 250px;
+	top: 800px;
+}
+
+.seat5 {
+	left: 1350px;
+	top: 800px;
+}
+
+.seat9 {
+	left: 30px;
+	top: 450px;
+}
+
+.seat3 {
+	left: 1600px;
+	top: 450px;
+}
+
+.seat10 {
+	left: 100px;
+	top: 150px;
+}
+
+.seat2 {
+	left: 1500px;
+	top: 150px;
+}
+
+.seat11 {
+	left: 500px;
+	top: 50px;
+}
+
+.seat1 {
+	left: 1100px;
+	top: 50px;
+}
+
+.left-top {
+	top: -70px;
+}
+
+.right-top {
+	left: 200px;
+	top: -70px;
+}
+
+.right-center {
+	left: 330px;
+	top: 30px;
+}
+
+.left-center {
+	left: -130px;
+	top: 30px;
+}
+
+.right-bottom {
+	left: 250px;
+	top: 130px;
+}
+
+.left-bottom {
+	left: -70px;
+	top: 130px;
+}
+
+.center-bottom {
+	left: 120px;
+	top: 120px;
+}
+
+.button {
+	width: 200px;
+	height: 90px;
+	background-color: #FF5050;
+	font-size: 30px;
+	font-weight: bold;
+	color: #fff;
+	border: 3px solid #FF5050;
+	border-radius: 15px;
+}
+
+.controls{
+	display: flex;
+	background-color: #4a7e3c;
+	justify-content: space-around;
+	align-items: center;
+}
+
+input {
+	width: 200px;
+	height: 50px;
+	background-color: #464646;
+	border: 2px solid #464646;
+	color: #fff;
+	font-size:40px;
+	border-radius: 10px;
+}
+
+.control {
+	display: flex;
+	width: 600px;
+	height: 90px;
+	background-color: #FF5050;
+	font-size: 30px;
+	font-weight: bold;
+	color: #fff;
+	border: 3px solid #FF5050;
+	border-radius: 10px;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.betting {
+	width: 70px;
+	height: 50px;
+	background-color: #C73DA3;
+	font-weight: bold;
+	color: #fff;
+	border: 3px solid #C73DA3;
+	border-radius: 5px;
+}
+
+.sempleButton {
+	display: flex;
+	width: 630px;
+	justify-content: space-around;
+}
+
+.chip-container {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	position: absolute;
+}
+
+.chip-container .image {
+	display: inline-flex;
+	width: 50px;
+}
+
+.chip-container .count {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: 10px;
+	color: #fff;
+	font-size: 20px;
+}
+
+.pot {
+	font-weight: bold;
+	font-size: 30px;
+	position: absolute;
+	left: 870px;
+	top: 300px;
+}
+	
