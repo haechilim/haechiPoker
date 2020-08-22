@@ -222,4 +222,25 @@ input {
 	left: 870px;
 	top: 300px;
 }
+
+.cards-on-floor {
+	position: absolute;
+	left: 670px;
+	top: 370px;
+}
+
+.turn {
+	position: absolute;
+	left: 330px;
+	top: 0px;
+}
+
+.river {
+	position: absolute;
+	left: 450px;
+	top: 0px;
+}
 	
+.cards-on-floor .image {
+	width: 100px;
+}
