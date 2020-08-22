@@ -3,11 +3,14 @@ body {
 }
 
 .table {
-	height: 1000px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	height: 1057px;
 	background-image: url('../image/table_large.png');
 	background-repeat: no-repeat;
 	background-size: 100%;
-	background-position: 0% 60%;
+	background-position: 0% 54%;
 	position: relative;
 }
 
@@ -242,7 +245,6 @@ body {
 
 .controls{
 	display: flex;
-	background-color: #4a7e3c;
 	justify-content: space-around;
 	align-items: center;
 }
@@ -269,6 +271,7 @@ input {
 	border-radius: 10px;
 	justify-content: space-around;
 	align-items: center;
+	margin-bottom: 30px;
 }
 
 .betting {
