@@ -12,7 +12,6 @@ body {
 	background-size: 100%;
 	background-position: 0% 54%;
 	position: relative;
-	z-index: -2;
 }
 
 .inline {
@@ -65,6 +64,7 @@ body {
 	color: #68bf68;
 	font-size: 16px;
     font-weight: normal;
+	text-align: center;
     border-top: 1px solid #4e4d4d;
     padding-top: 1px;
 }
