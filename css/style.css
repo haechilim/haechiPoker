@@ -1,11 +1,15 @@
 body {
 	margin: 0px;
+	background-color: #29180e;
+	overflow: hidden;
+	transform-origin: left center;
 }
 
 .table {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
+	width: 1919px;
 	height: 1057px;
 	background-image: url('../image/table_large.png');
 	background-repeat: no-repeat;
