@@ -141,12 +141,12 @@ body {
 }
 
 .left-top {
-	left: -50px;
+	left: -80px;
 	top: -70px;
 }
 
 .right-top {
-	left: 320px;
+	left: 305px;
 	top: -70px;
 }
 
@@ -156,13 +156,13 @@ body {
 }
 
 .left-center {
-	left: -130px;
+	left: -150px;
 	top: 30px;
 }
 
 .right-bottom {
 	left: 250px;
-	top: 130px;
+	top: 110px;
 }
 
 .left-bottom {
@@ -183,43 +183,43 @@ body {
 
 .right-of-card {
 	position: absolute;
-	left: 300px;
+	left: 290px;
 	top: -40px;
 }
 
 .right-of-nickname {
 	position: absolute;
-	left: 320px;
+	left: 300px;
 	top: 0px;
 }
 
 .right-center-of-nickname {
 	position: absolute;
-	left: 320px;
+	left: 295px;
 	top: 40px;
 }
 
 .left-of-nickname {
 	position: absolute;
-	left: -70px;
+	left: -90px;
 	top: 0px;
 }
 
 .left-of-card {
 	position: absolute;
-	left: 0px;
+	left: -70px;
 	top: -60px;
 }
 
 .left-center-of-nickname {
 	position: absolute;
-	left: -70px;
+	left: -80px;
 	top: 50px;
 }
 
 .right-bottom-of-nickname {
 	position: absolute;
-	left: 300px;
+	left: 270px;
 	top: 80px;
 }
 
@@ -303,7 +303,7 @@ input {
 
 .chip-container .image {
 	display: inline-flex;
-	width: 50px;
+	width: 60px;
 }
 
 .chip-container .count {
@@ -311,8 +311,11 @@ input {
 	justify-content: center;
 	align-items: center;
 	margin-left: 10px;
-	color: #fff;
+	color: #d5b359;
 	font-size: 20px;
+	font-weight: bold;
+	font-style: italic;
+	text-shadow: 1px 1px 0px #000000;
 }
 
 .chip-container-position {
@@ -324,9 +327,13 @@ input {
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-	margin-left: 80px;
-	color: #fff;
-	font-size: 20px;
+	margin-left: 70px;
+	margin-top: 10px;
+	color: #d5b359;
+	font-size: 24px;
+	font-weight: bold;
+	font-style: italic;
+	text-shadow: 1px 1px 0px #000000;
 }
 
 .first-chip {
@@ -349,10 +356,11 @@ input {
 
 .pot {
 	font-weight: bold;
-	font-size: 30px;
+	font-size: 28px;
 	position: absolute;
 	left: 870px;
 	top: 300px;
+	text-shadow: 0px 1px 0px #333333;
 }
 
 .cards-on-floor {
@@ -382,7 +390,7 @@ input {
 }
 
 .dealerbutton {
-	width: 50px;
+	width: 70px;
 }
 
 .person {
