@@ -1,5 +1,6 @@
 var TOTAL_SEATS = 9;
 
+var turn = 0;
 var players = [
 	{
 		id: 0,
@@ -17,6 +18,13 @@ var players = [
 	},
 	{
 		id: 2,
+		avatar: 9,
+		seat: 0,
+		name: "삐쭈",
+		chip: 15000000
+	},
+	{
+		id: 3,
 		avatar: 11,
 		seat: 8,
 		name: "김아빠",
@@ -29,8 +37,16 @@ document.addEventListener("DOMContentLoaded", function() {
 		resize();
 	});
 	
+	document.querySelector('#fold').addEventListener('click', function() {
+		showDealerbutton(players[turn].seat, false);
+		turn = (turn + 1) % players.length;
+		showDealerbutton(players[turn].seat, true);
+	});
+	
 	resize();	
 	init();
+	
+	showDealerbutton(players[turn].seat, true);
 });
 
 function resize() {
@@ -50,6 +66,7 @@ function resize() {
 function init() {
 	initTable();
 	initPlayers();
+	players = sortBySeat();
 }
 
 function initTable() {
@@ -134,4 +151,11 @@ function showFloorCards(visible) {
 
 function showFloorChip(visible) {
 	document.querySelector("#total-chip-container").style.display = visible ? "flex" : "none";
+}
+
+function sortBySeat(desc) {	
+	return players.sort(function(p1, p2) {
+		var result = p1.seat - p2.seat;
+		return desc ? -result : result;
+	});
 }
