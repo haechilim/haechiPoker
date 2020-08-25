@@ -1,4 +1,5 @@
 var TOTAL_SEATS = 9;
+var CARDS_DEALING_INTERVAL = 100;
 
 var turn = 0;
 var players = [
@@ -29,52 +30,52 @@ var players = [
 		seat: 8,
 		name: "김아빠",
 		chip: 99999
+	},
+	{
+		id: 4,
+		avatar: 11,
+		seat: 5,
+		name: "임뽕구",
+		chip: 1500000
 	}
 ];
 
 document.addEventListener("DOMContentLoaded", function() {
-	window.addEventListener('resize', function() {
-		resize();
-	});
-	
-	document.querySelector('#fold').addEventListener('click', function() {
-		showDealerbutton(players[turn].seat, false);
-		turn = (turn + 1) % players.length;
-		showDealerbutton(players[turn].seat, true);
-	});
-	
-	resize();	
 	init();
-	
-	showDealerbutton(players[turn].seat, true);
+	resetTable();
+	bindEvents();
 });
 
-function resize() {
-	var DEFAULT_WIDTH = 1919;
-	var DEFAULT_HEIGHT = 1057;
-	
-	var ratioX = window.innerWidth / DEFAULT_WIDTH;
-	var ratioY = window.innerHeight / DEFAULT_HEIGHT;
-	var offsetX = (DEFAULT_WIDTH - window.innerWidth) / 2;
-	var offsetY = (DEFAULT_HEIGHT - window.innerHeight) / 2;
-	
-	document.body.style.transform = "scale(" + Math.min(ratioX, ratioY) + ")";
-	document.getElementById("table").style.transform = "translate(0px, " + (ratioY > 1 ? -offsetY : 0) + "px)";
-	window.scrollTo(0, offsetY);
+function nextTurn() {
+	turn = (turn + 1) % players.length;
 }
 
+function resetTable() {
+	showAllPlayerCards(false);
+	passDealerButton();
+	dealCards();
+}
+
+function passDealerButton() {
+	showAllPlayerDealerButtons(false);
+	showPlayerDealerButton(players[turn].seat, true);
+}	
+
+// ----------------------------------------
+
 function init() {
+	resize();
 	initTable();
 	initPlayers();
-	players = sortBySeat();
+	players = sortPlayersBySeat();
 }
 
 function initTable() {
-	showPlayers(false);
-	showPlayerChips(false);
-	showPlayerCards(false);
-	showPlayerTimers(false);
-	showPlayerDealerButtons(false);
+	showAllPlayers(false);
+	showAllPlayerChips(false);
+	showAllPlayerCards(false);
+	showAllPlayerTimers(false);
+	showAllPlayerDealerButtons(false);
 	
 	showFloorCards(false);
 	showFloorChip(false);
@@ -89,60 +90,100 @@ function initPlayers() {
 	}
 }
 
+// ----------------------------------------
+
+function dealCards() {
+	var playerIndex = 0;
+	var cardIndex = 1;
+	
+	var timer = setInterval(function() {
+		showPlayerCard(players[playerIndex++].seat, cardIndex, true);
+		
+		if(playerIndex == players.length) {
+			playerIndex = 0;
+			cardIndex++;
+			
+			if(cardIndex == 3) clearInterval(timer);
+		}
+	}, CARDS_DEALING_INTERVAL);
+}
+
+// ----------------------------------------
+
+function bindEvents() {
+	window.addEventListener('resize', function() {
+		resize();
+	});
+	
+	document.querySelector('#fold').addEventListener('click', function() {
+		nextTurn();
+		resetTable();
+	});
+}
+
+// ----------------------------------------
+
+function showAllPlayers(visible) {
+	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
+		showPlayer(seat, visible);
+	}
+}
+
+function showAllPlayerDealerButtons(visible) {
+	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
+		showPlayerDealerButton(seat, visible);
+	}
+}
+
+function showAllPlayerChips(visible) {
+	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
+		showPlayerChip(seat, visible);
+	}
+}
+
+function showAllPlayerCards(visible) {
+	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
+		showPlayerCards(seat, visible);
+	}
+}
+
+function showAllPlayerTimers(visible) {
+	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
+		showPlayerTimer(seat, visible);
+	}
+}
+
+function showPlayerCards(seat, visible) {
+	showPlayerCard(seat, 1, visible);
+	showPlayerCard(seat, 2, visible);
+}
+
+// ----------------------------------------
+
 function updatePlayer(player) {
 	document.querySelector("#p" + player.seat + " .avatar").setAttribute( 'src', 'image/avatar/avatar' + player.avatar + '.png' );
 	document.querySelector("#p" + player.seat + " .nickname").innerHTML = player.name;
 	document.querySelector("#p" + player.seat + " .chips").innerHTML = player.chip.toLocaleString();
 }
 
-function showPlayer(seat, visible) {	
+function showPlayer(seat, visible) {
 	document.querySelector("#p" + seat).style.display = visible ? "flex" : "none";
 }
 
-function showPlayers(visible) {
-	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
-		showPlayer(seat, visible);
-	}
-}
-
-function showDealerbutton(seat, visible) {
-	document.querySelector("#p" + seat + " .dealerbutton").style.display = visible ? "flex" : "none";
-}
-
-function showPlayerDealerButtons(visible) {
-	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
-		showDealerbutton(seat, visible);
-	}
-}
-
-function showPlayerChip(seat, visible) {
-	document.querySelector("#p" + seat + " .chip-container").style.display = visible ? "flex" : "none";
-}
-
-function showPlayerChips(visible) {
-	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
-		showPlayerChip(seat, visible);
-	}
-}
-
-function showHoldingCard(seat, visible) {
-	document.querySelector("#p" + seat + " .holding-cards").style.display = visible ? "flex" : "none";
-}
-
-function showPlayerCards(visible) {
-	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
-		showHoldingCard(seat, visible);
-	}
+function showPlayerCard(seat, number, visible) {
+	document.querySelector("#p" + seat + " .card" + number).style.display = visible ? "inline" : "none";
 }
 
 function showPlayerTimer(seat, visible) {
 	document.querySelector("#p" + seat + " .timer").style.display = visible ? "block" : "none";
 }
 
-function showPlayerTimers(visible) {
-	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
-		showPlayerTimer(seat, visible);
-	}
+function showPlayerChip(seat, visible) {
+	document.querySelector("#p" + seat + " .chip-container").style.display = visible ? "flex" : "none";
+}
+
+function showPlayerDealerButton(seat, visible) {
+	document.querySelector("#p" + seat + " .dealerbutton").style.display = visible ? "flex" : "none";
 }
 
 function showFloorCards(visible) {
@@ -153,9 +194,25 @@ function showFloorChip(visible) {
 	document.querySelector("#total-chip-container").style.display = visible ? "flex" : "none";
 }
 
-function sortBySeat(desc) {	
+// ----------------------------------------
+
+function sortPlayersBySeat(desc) {	
 	return players.sort(function(p1, p2) {
 		var result = p1.seat - p2.seat;
 		return desc ? -result : result;
 	});
+}
+
+function resize() {
+	var DEFAULT_WIDTH = 1919;
+	var DEFAULT_HEIGHT = 1057;
+	
+	var ratioX = window.innerWidth / DEFAULT_WIDTH;
+	var ratioY = window.innerHeight / DEFAULT_HEIGHT;
+	var offsetX = (DEFAULT_WIDTH - window.innerWidth) / 2;
+	var offsetY = (DEFAULT_HEIGHT - window.innerHeight) / 2;
+	
+	document.body.style.transform = "scale(" + Math.min(ratioX, ratioY) + ")";
+	document.getElementById("table").style.transform = "translate(0px, " + (ratioY > 1 ? -offsetY : 0) + "px)";
+	window.scrollTo(0, offsetY);
 }
