@@ -2,43 +2,47 @@ var TOTAL_SEATS = 9;
 var CARDS_DEALING_INTERVAL = 100;
 var BETTING_TIMEOUT = 8;
 
-var players = [
-	{
-		id: 0,
-		avatar: 1,
-		seat: 6,
-		name: "해치",
-		chip: 30000
-	},
-	{
-		id: 1,
-		avatar: 3,
-		seat: 2,
-		name: "장삐쭈",
-		chip: 15000
-	},
-	{
-		id: 2,
-		avatar: 9,
-		seat: 8,
-		name: "삐쭈",
-		chip: 15000000
-	},
-	{
-		id: 3,
-		avatar: 11,
-		seat: 4,
-		name: "김아빠",
-		chip: 99999
-	},
-	{
-		id: 4,
-		avatar: 11,
-		seat: 7,
-		name: "임뽕구",
-		chip: 1500000
-	}
-];
+var game = {
+	players: [
+		{
+			id: 0,
+			avatar: 1,
+			seat: 6,
+			name: "해치",
+			chip: 30000
+		},
+		{
+			id: 1,
+			avatar: 3,
+			seat: 2,
+			name: "장삐쭈",
+			chip: 15000
+		},
+		{
+			id: 2,
+			avatar: 9,
+			seat: 8,
+			name: "삐쭈",
+			chip: 15000000
+		},
+		{
+			id: 3,
+			avatar: 11,
+			seat: 4,
+			name: "김아빠",
+			chip: 99999
+		},
+		{
+			id: 4,
+			avatar: 11,
+			seat: 7,
+			name: "임뽕구",
+			chip: 1500000
+		}
+	]
+};
+
+
 
 var dealerIndex = 0;
 var turn;
@@ -51,16 +55,16 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function nextGame() {
-	dealerIndex = (dealerIndex + 1) % players.length;
+	dealerIndex = (dealerIndex + 1) % game.players.length;
 	firstTurn();
 }
 
 function firstTurn() {
-	turn = (dealerIndex + 3) % players.length;
+	turn = (dealerIndex + 3) % game.players.length;
 }
 
 function nextTurn() {
-	turn = (turn + 1) % players.length;
+	turn = (turn + 1) % game.players.length;
 }
 
 function resetTable() {
@@ -73,7 +77,7 @@ function resetTable() {
 
 function passDealerButton() {
 	showAllPlayerDealerButtons(false);
-	showPlayerDealerButton(players[dealerIndex].seat, true);
+	showPlayerDealerButton(game.players[dealerIndex].seat, true);
 }
 
 // ----------------------------------------
@@ -82,7 +86,7 @@ function init() {
 	resize();
 	initTable();
 	initPlayers();
-	players = sortPlayersBySeat();
+	sortPlayersBySeat();
 	firstTurn();
 }
 
@@ -98,6 +102,8 @@ function initTable() {
 }
 
 function initPlayers() {
+	var players = game.players;
+	
 	for(var i = 0; i < players.length; i++) {
 		var player = players[i];
 		
@@ -111,6 +117,7 @@ function initPlayers() {
 function dealCards() {
 	var playerIndex = 0;
 	var cardIndex = 1;
+	var players = game.players;
 	
 	var timer = setInterval(function() {
 		showPlayerCard(players[playerIndex++].seat, cardIndex, true);
@@ -201,7 +208,7 @@ function showPlayerCards(seat, visible) {
 
 function showBettingTimer() {
 	showAllPlayerTimers(false);
-	showPlayerTimer(players[turn].seat, true);
+	showPlayerTimer(game.players[turn].seat, true);
 }
 
 // ----------------------------------------
@@ -243,7 +250,7 @@ function showFloorChip(visible) {
 // ----------------------------------------
 
 function getProgress(turn) {
-	return document.querySelector(".seat" + players[turn].seat + " .progress")
+	return document.querySelector(".seat" + game.players[turn].seat + " .progress")
 }
 
 function updateProgressStatus(progress, percent) {
@@ -253,7 +260,7 @@ function updateProgressStatus(progress, percent) {
 // ----------------------------------------
 
 function sortPlayersBySeat(desc) {	
-	return players.sort(function(p1, p2) {
+	game.players = game.players.sort(function(p1, p2) {
 		var result = p1.seat - p2.seat;
 		return desc ? -result : result;
 	});
