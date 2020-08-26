@@ -1,7 +1,7 @@
 var TOTAL_SEATS = 9;
 var CARDS_DEALING_INTERVAL = 100;
+var BETTING_TIMEOUT = 8;
 
-var turn = 0;
 var players = [
 	{
 		id: 0,
@@ -20,7 +20,7 @@ var players = [
 	{
 		id: 2,
 		avatar: 9,
-		seat: 0,
+		seat: 7,
 		name: "삐쭈",
 		chip: 15000000
 	},
@@ -40,11 +40,24 @@ var players = [
 	}
 ];
 
+var dealerIndex = 0;
+var turn;
+var bettingTimer;
+
 document.addEventListener("DOMContentLoaded", function() {
 	init();
 	resetTable();
 	bindEvents();
 });
+
+function nextGame() {
+	dealerIndex = (dealerIndex + 1) % players.length;
+	firstTurn();
+}
+
+function firstTurn() {
+	turn = (dealerIndex + 3) % players.length;
+}
 
 function nextTurn() {
 	turn = (turn + 1) % players.length;
@@ -54,12 +67,14 @@ function resetTable() {
 	showAllPlayerCards(false);
 	passDealerButton();
 	dealCards();
+	showBettingTimer();
+	startBettingTimer();
 }
 
 function passDealerButton() {
 	showAllPlayerDealerButtons(false);
-	showPlayerDealerButton(players[turn].seat, true);
-}	
+	showPlayerDealerButton(players[dealerIndex].seat, true);
+}
 
 // ----------------------------------------
 
@@ -68,6 +83,7 @@ function init() {
 	initTable();
 	initPlayers();
 	players = sortPlayersBySeat();
+	firstTurn();
 }
 
 function initTable() {
@@ -108,6 +124,25 @@ function dealCards() {
 	}, CARDS_DEALING_INTERVAL);
 }
 
+function startBettingTimer() {
+	var percent = 100;
+	var step = 0.5;
+	var interval = (BETTING_TIMEOUT * 1000) / (100 / step);
+	var progress = getProgress(turn);
+	
+	stopBettingTimer();
+	
+	bettingTimer = setInterval(function() {
+		if(percent < 0) stopBettingTimer();
+		updateProgressStatus(progress, percent);
+		percent -= step;
+	}, interval);
+}
+
+function stopBettingTimer() {
+	if(bettingTimer) clearInterval(bettingTimer)
+}
+
 // ----------------------------------------
 
 function bindEvents() {
@@ -116,8 +151,14 @@ function bindEvents() {
 	});
 	
 	document.querySelector('#fold').addEventListener('click', function() {
-		nextTurn();
+		nextGame();
 		resetTable();
+	});
+	
+	document.querySelector('#call').addEventListener('click', function() {
+		nextTurn();
+		showBettingTimer();
+		startBettingTimer();
 	});
 }
 
@@ -158,6 +199,11 @@ function showPlayerCards(seat, visible) {
 	showPlayerCard(seat, 2, visible);
 }
 
+function showBettingTimer() {
+	showAllPlayerTimers(false);
+	showPlayerTimer(players[turn].seat, true);
+}
+
 // ----------------------------------------
 
 function updatePlayer(player) {
@@ -192,6 +238,16 @@ function showFloorCards(visible) {
 
 function showFloorChip(visible) {
 	document.querySelector("#total-chip-container").style.display = visible ? "flex" : "none";
+}
+
+// ----------------------------------------
+
+function getProgress(turn) {
+	return document.querySelector("#p" + players[turn].seat + " .progress")
+}
+
+function updateProgressStatus(progress, percent) {
+	progress.style.width = percent + "%";
 }
 
 // ----------------------------------------
