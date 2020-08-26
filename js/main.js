@@ -6,35 +6,35 @@ var players = [
 	{
 		id: 0,
 		avatar: 1,
-		seat: 4,
+		seat: 6,
 		name: "해치",
 		chip: 30000
 	},
 	{
 		id: 1,
 		avatar: 3,
-		seat: 1,
+		seat: 2,
 		name: "장삐쭈",
 		chip: 15000
 	},
 	{
 		id: 2,
 		avatar: 9,
-		seat: 7,
+		seat: 8,
 		name: "삐쭈",
 		chip: 15000000
 	},
 	{
 		id: 3,
 		avatar: 11,
-		seat: 8,
+		seat: 4,
 		name: "김아빠",
 		chip: 99999
 	},
 	{
 		id: 4,
 		avatar: 11,
-		seat: 5,
+		seat: 7,
 		name: "임뽕구",
 		chip: 1500000
 	}
@@ -207,29 +207,29 @@ function showBettingTimer() {
 // ----------------------------------------
 
 function updatePlayer(player) {
-	document.querySelector("#p" + player.seat + " .avatar").setAttribute( 'src', 'image/avatar/avatar' + player.avatar + '.png' );
-	document.querySelector("#p" + player.seat + " .nickname").innerHTML = player.name;
-	document.querySelector("#p" + player.seat + " .chips").innerHTML = player.chip.toLocaleString();
+	document.querySelector(".seat" + player.seat + " .avatar").setAttribute( 'src', 'image/avatar/avatar' + player.avatar + '.png' );
+	document.querySelector(".seat" + player.seat + " .nickname").innerHTML = player.name;
+	document.querySelector(".seat" + player.seat + " .chips").innerHTML = player.chip.toLocaleString();
 }
 
 function showPlayer(seat, visible) {
-	document.querySelector("#p" + seat).style.display = visible ? "flex" : "none";
+	document.querySelector(".seat" + seat).style.display = visible ? "flex" : "none";
 }
 
 function showPlayerCard(seat, number, visible) {
-	document.querySelector("#p" + seat + " .card" + number).style.display = visible ? "inline" : "none";
+	document.querySelector(".seat" + seat + " .card" + number).style.display = visible ? "inline" : "none";
 }
 
 function showPlayerTimer(seat, visible) {
-	document.querySelector("#p" + seat + " .timer").style.display = visible ? "block" : "none";
+	document.querySelector(".seat" + seat + " .timer").style.display = visible ? "block" : "none";
 }
 
 function showPlayerChip(seat, visible) {
-	document.querySelector("#p" + seat + " .chip-container").style.display = visible ? "flex" : "none";
+	document.querySelector(".seat" + seat + " .chip-container").style.display = visible ? "flex" : "none";
 }
 
 function showPlayerDealerButton(seat, visible) {
-	document.querySelector("#p" + seat + " .dealerbutton").style.display = visible ? "flex" : "none";
+	document.querySelector(".seat" + seat + " .dealerbutton").style.display = visible ? "flex" : "none";
 }
 
 function showFloorCards(visible) {
@@ -243,7 +243,7 @@ function showFloorChip(visible) {
 // ----------------------------------------
 
 function getProgress(turn) {
-	return document.querySelector("#p" + players[turn].seat + " .progress")
+	return document.querySelector(".seat" + players[turn].seat + " .progress")
 }
 
 function updateProgressStatus(progress, percent) {

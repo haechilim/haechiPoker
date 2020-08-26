@@ -103,47 +103,47 @@ body {
 	z-index: 1;
 }
 
-.seat6 {
+.seat4 {
 	left: 800px;
 	top: 800px;
 }
 
-.seat7 {
+.seat5 {
 	left: 250px;
 	top: 750px;
 }
 
-.seat5 {
+.seat3 {
 	left: 1350px;
 	top: 750px;
 }
 
-.seat9 {
+.seat6 {
 	left: 30px;
 	top: 450px;
 }
 
-.seat3 {
+.seat2 {
 	left: 1600px;
 	top: 450px;
 }
 
-.seat10 {
+.seat7 {
 	left: 100px;
 	top: 150px;
 }
 
-.seat2 {
+.seat1 {
 	left: 1500px;
 	top: 150px;
 }
 
-.seat11 {
+.seat8 {
 	left: 500px;
 	top: 90px;
 }
 
-.seat1 {
+.seat0 {
 	left: 1100px;
 	top: 90px;
 }
