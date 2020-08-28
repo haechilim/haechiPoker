@@ -27,7 +27,7 @@ var CLUB = 3;
 
 var game = {
 	code: CODE_SUCCESS,
-	status: GAME_BETTING,
+	status: GAME_RIVER,
 	dealer: 3,
 	actor: 2,
 	floor: {
@@ -189,6 +189,7 @@ function resetTable() {
 function updateTable() {
 	updatePlayers();
 	showAllFloorCards(true);
+	updatePot();
 }
 
 function showAllFloorCards(visible) {
@@ -198,6 +199,10 @@ function showAllFloorCards(visible) {
 	}
 	
 	switch(game.status) {
+		case GAME_PRE_FLOP:
+			showAll(true);
+			break;
+		
 		case GAME_FLOP:
 			dealFlopCards();
 			break;
@@ -210,8 +215,9 @@ function showAllFloorCards(visible) {
 			dealRiverCards();	
 			break;
 			
-		default:
+		case GAME_BETTING:
 			showAll(true);
+			startBettingTimer();
 			break;
 	}
 	
@@ -241,7 +247,11 @@ function showAllFloorCards(visible) {
 		
 		var timer = setInterval(function() {
 			showFloorCard(true, cardIndex++);
-			if(cardIndex > endIndex) clearInterval(timer);
+			
+			if(cardIndex > endIndex) {
+				clearInterval(timer);
+				startBettingTimer();
+			}
 		}, DEALING_FLOOR_INTERVAL);
 	}
 }
@@ -260,14 +270,11 @@ function updatePlayers() {
 		showPlayerChip(player.seat, player.betting > 0, player.betting);
 		
 		if(game.status != GAME_PRE_FLOP) showPlayerCards(player.seat, true);
-		
-		if(player.id == game.actor) {
-			showPlayerTimer(player.seat, true);
-			startBettingTimer();
-		}
 	}
 	
 	if(game.status == GAME_PRE_FLOP) showAllPlayerCards(true);
+	
+	showPlayerDealerButton(getPlayer(game.dealer).seat, true);
 }
 
 function updatePlayer(player) {
@@ -278,6 +285,10 @@ function updatePlayer(player) {
 
 function updatePlayerCard(player, number) {
 	document.querySelector(".seat" + player.seat + " .card" + number).setAttribute("src", getCardImage(player, number));
+}
+
+function updatePot() {
+	document.querySelector(".pot").innerHTML = "POT : " + game.floor.pot;
 }
 
 // ----------------------------------------
@@ -333,12 +344,20 @@ function initTable() {
 	showAllPlayerCards(false);
 	showAllPlayerTimers(false);
 	showAllPlayerDealerButtons(false);
+	showFloorChip(false);
 	showAllFloorCards(false);
 }
 
 // ----------------------------------------
 
 function startBettingTimer() {
+	setTimeout(function() {
+		showPlayerTimer(getPlayer(game.actor).seat, true);
+		startPlayerTimer();
+	}, DEALING_FLOOR_INTERVAL);
+}
+
+function startPlayerTimer() {
 	var percent = 100;
 	var step = 0.5;
 	var interval = (BETTING_TIMEOUT * 1000) / (100 / step);
@@ -372,7 +391,7 @@ function bindEvents() {
 	document.querySelector('#call').addEventListener('click', function() {
 		nextTurn();
 		showBettingTimer();
-		startBettingTimer();
+		startPlayerTimer();
 	});
 }
 
@@ -416,7 +435,10 @@ function showAllPlayerCards(visible) {
 				playerIndex = 0;
 				cardIndex++;
 				
-				if(cardIndex == 3) clearInterval(timer);
+				if(cardIndex == 3) {
+					startBettingTimer();
+					clearInterval(timer);
+				}
 			}
 		}, CARDS_DEALING_INTERVAL);
 	}
@@ -480,16 +502,25 @@ function showFloorChip(visible) {
 // ----------------------------------------
 
 function getProgress(actor) {
-	var players = game.players;
+	var player = getPlayer(actor);
 	
-	for(var playerIndex = 0; playerIndex < players.length; playerIndex++) {
-		if(players[playerIndex].id == actor)
-		return document.querySelector(".seat" + players[playerIndex].seat + " .progress");
-	}
+	if(!player) return;
+	
+	return document.querySelector(".seat" + player.seat + " .progress");
 }
 
 function updateProgressStatus(progress, percent) {
 	progress.style.width = percent + "%";
+}
+
+function getPlayer(id) {
+	var players = game.players;
+	
+	for(var i = 0; i < players.length; i++) {
+		if(players[i].id == id) return players[i];
+	}
+	
+	return null;
 }
 
 // ----------------------------------------
