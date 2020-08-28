@@ -1,5 +1,6 @@
 var TOTAL_SEATS = 9;
 var CARDS_DEALING_INTERVAL = 100;
+var DEALING_FLOOR_INTERVAL = 500;
 var BETTING_TIMEOUT = 8;
 
 // 에러 코드
@@ -26,7 +27,7 @@ var CLUB = 3;
 
 var game = {
 	code: CODE_SUCCESS,
-	status: GAME_RIVER,
+	status: GAME_BETTING,
 	dealer: 3,
 	actor: 2,
 	floor: {
@@ -47,6 +48,11 @@ var game = {
 			{
 				shape: DIAMOND,
 				number: 8
+			}
+			,
+			{
+				shape: DIAMOND,
+				number: 9
 			}
 		]
 	},
@@ -119,7 +125,7 @@ var game = {
 			cards: [
 				{
 					shape: SPADE,
-					number: 14
+					number: 11
 				},
 				{
 					shape: SPADE,
@@ -176,15 +182,79 @@ function nextTurn() {
 function resetTable() {
 	showAllPlayerCards(false);
 	passDealerButton();
-	dealCards();
-	showBettingTimer();
-	startBettingTimer();
 }
 
 // ----------------------------------------
 
 function updateTable() {
 	updatePlayers();
+	showAllFloorCards();
+}
+
+function showAllFloorCards() {
+	var count = 0;
+	
+	switch(game.status) {
+		case GAME_FLOP:
+			dealFlopCards();
+			break;
+			
+		case GAME_TURN:
+			dealTurnCards();
+			count = 3;
+			break;
+			
+		case GAME_RIVER:
+			dealRiverCards();	
+			count = 4;
+			break;
+	}
+	
+	showAll(count);
+	
+	function showAll(count) {
+		for(var index = 0; index < game.floor.cards.length; index++) {
+			if(index == count) break;
+			
+			if(index <= 2) showFlopCard(true, index);
+			else if(index == 3) showTurnCard(true);
+			else if(index == 4) showRiverCard(true);
+		}
+	}
+	
+	function dealFlopCards() {
+		if(game.status != GAME_FLOP) return false;
+		
+		var cardIndex = 0;
+		
+		var timer = setInterval(function() {
+			showFlopCard(true, cardIndex++);
+			
+			if(cardIndex == 3) clearInterval(timer);
+		}, DEALING_FLOOR_INTERVAL);
+	}
+	
+	function dealTurnCards() {
+		if(game.status != GAME_TURN) return false;
+		
+		var cardIndex = 0;
+		
+		var timer = setInterval(function() {
+			showTurnCard(true);
+			clearInterval(timer);
+		}, DEALING_FLOOR_INTERVAL);
+	}
+	
+	function dealRiverCards() {
+		if(game.status != GAME_RIVER) return false;
+		
+		var cardIndex = 0;
+		
+		var timer = setInterval(function() {
+			showRiverCard(true);
+			clearInterval(timer);
+		}, DEALING_FLOOR_INTERVAL);
+	}
 }
 
 function updatePlayers() {
@@ -198,9 +268,17 @@ function updatePlayers() {
 		updatePlayerCard(player, 2);
 		
 		showPlayer(player.seat, true);
-		showPlayerCards(player.seat, true);
 		showPlayerChip(player.seat, player.betting > 0, player.betting);
+		
+		if(game.status != GAME_PRE_FLOP) showPlayerCards(player.seat, true);
+		
+		if(player.id == game.actor) {
+			showPlayerTimer(player.seat, true);
+			startBettingTimer();
+		}
 	}
+	
+	if(game.status == GAME_PRE_FLOP) showAllPlayerCards(true);
 }
 
 function updatePlayer(player) {
@@ -213,6 +291,8 @@ function updatePlayerCard(player, number) {
 	document.querySelector(".seat" + player.seat + " .card" + number).setAttribute("src", getCardImage(player, number));
 }
 
+// ----------------------------------------
+
 function getCardImage(player, number) {
 	var index = number - 1;
 	
@@ -220,14 +300,14 @@ function getCardImage(player, number) {
 	
 	var card = player.cards[index];
 	
-	return 'image/' + cardFile(card.number, card.shape);
+	return 'image/' + getCardFile(card.number, card.shape);
+}
+
+function getCardFile(number, shape) {
+	if(number > 0) return getCardNumber(number) + '_of_' + getCardShape(shape) + '.png';
+	return 'back.png';
 	
-	function cardFile(number, shape) {
-		if(number > 0) return cardNumber(number) + '_of_' + cardShape(shape) + '.png';
-		return 'back.png';
-	}
-	
-	function cardNumber(number) {
+	function getCardNumber(number) {
 		if(number == 11) return "jack";
 		else if(number == 12) return "queen";
 		else if(number == 13) return "king";
@@ -235,21 +315,12 @@ function getCardImage(player, number) {
 		else return number;
 	}
 
-	function cardShape(shape) {
+	function getCardShape(shape) {
 		if(shape == 0) return "spades";
 		else if(shape == 1) return "diamonds";
 		else if(shape == 2) return "hearts";
 		else if(shape == 3) return "clubs";
 	}
-}
-
-function getNumber(number) {
-	if(number == 11) return "jack";
-	else if(number == 12) return "queen";
-	else if(number == 13) return "king";
-	else if(number == 14) return "ace";
-	
-	return number;
 }
 
 // ----------------------------------------
@@ -274,34 +345,19 @@ function initTable() {
 	showAllPlayerTimers(false);
 	showAllPlayerDealerButtons(false);
 	
-	showFloorCards(false);
+	showAllFlopCards(false);
+	showTurnCard(false);
+	showRiverCard(false);
 	showFloorChip(false);
 }
 
 // ----------------------------------------
 
-function dealCards() {
-	var playerIndex = 0;
-	var cardIndex = 1;
-	var players = game.players;
-	
-	var timer = setInterval(function() {
-		showPlayerCard(players[playerIndex++].seat, cardIndex, true);
-		
-		if(playerIndex == players.length) {
-			playerIndex = 0;
-			cardIndex++;
-			
-			if(cardIndex == 3) clearInterval(timer);
-		}
-	}, CARDS_DEALING_INTERVAL);
-}
-
 function startBettingTimer() {
 	var percent = 100;
 	var step = 0.5;
 	var interval = (BETTING_TIMEOUT * 1000) / (100 / step);
-	var progress = getProgress(turn);
+	var progress = getProgress(game.actor);
 	
 	stopBettingTimer();
 	
@@ -356,8 +412,28 @@ function showAllPlayerChips(visible) {
 }
 
 function showAllPlayerCards(visible) {
-	for(var seat = 0; seat < TOTAL_SEATS; seat++) {
-		showPlayerCards(seat, visible);
+	if(game.status == GAME_PRE_FLOP && visible) animate();
+	else {
+		for(var seat = 0; seat < TOTAL_SEATS; seat++) {
+			showPlayerCards(seat, visible);
+		}
+	}
+	
+	function animate() {
+		var playerIndex = 0;
+		var cardIndex = 1;
+		var players = game.players;
+		
+		var timer = setInterval(function() {
+			showPlayerCard(players[playerIndex++].seat, cardIndex, true);
+			
+			if(playerIndex == players.length) {
+				playerIndex = 0;
+				cardIndex++;
+				
+				if(cardIndex == 3) clearInterval(timer);
+			}
+		}, CARDS_DEALING_INTERVAL);
 	}
 }
 
@@ -400,8 +476,37 @@ function showPlayerDealerButton(seat, visible) {
 	document.querySelector(".seat" + seat + " .dealerbutton").style.display = visible ? "flex" : "none";
 }
 
-function showFloorCards(visible) {
-	document.querySelector("#cards-on-floor").style.display = visible ? "flex" : "none";
+function showAllFlopCards(visible) {
+	showFlopCard(visible, 0);
+	showFlopCard(visible, 1);
+	showFlopCard(visible, 2);
+}
+
+function showFlopCard(visible, cardIndex) {
+	var cards = game.floor.cards;
+	var cardFile = getCardFile(cards[cardIndex].number, cards[cardIndex].shape);
+	
+	var card = document.querySelector(".flop .card" + cardIndex);
+	card.style.display = visible ? "inline-flex" : "none";
+	card.setAttribute( 'src', 'image/' + cardFile);
+}
+
+function showTurnCard(visible) {
+	var cards = game.floor.cards;
+	var cardFile = getCardFile(cards[3].number, cards[3].shape);
+	
+	var card = document.querySelector(".turn .card");
+	card.style.display = visible ? "inline-flex" : "none";
+	card.setAttribute( 'src', 'image/' + cardFile);
+}
+
+function showRiverCard(visible) {
+	var cards = game.floor.cards;
+	var cardFile = getCardFile(cards[4].number, cards[4].shape);
+	
+	var card = document.querySelector(".river .card");
+	card.style.display = visible ? "inline-flex" : "none";
+	card.setAttribute( 'src', 'image/' + cardFile);
 }
 
 function showFloorChip(visible) {
@@ -410,8 +515,13 @@ function showFloorChip(visible) {
 
 // ----------------------------------------
 
-function getProgress(turn) {
-	return document.querySelector(".seat" + game.players[turn].seat + " .progress")
+function getProgress(actor) {
+	var players = game.players;
+	
+	for(var playerIndex = 0; playerIndex < players.length; playerIndex++) {
+		if(players[playerIndex].id == actor)
+		return document.querySelector(".seat" + players[playerIndex].seat + " .progress");
+	}
 }
 
 function updateProgressStatus(progress, percent) {
