@@ -188,11 +188,14 @@ function resetTable() {
 
 function updateTable() {
 	updatePlayers();
-	showAllFloorCards();
+	showAllFloorCards(true);
 }
 
-function showAllFloorCards() {
-	var count = 0;
+function showAllFloorCards(visible) {
+	if(!visible) {
+		showAll(false);
+		return;
+	}
 	
 	switch(game.status) {
 		case GAME_FLOP:
@@ -201,58 +204,44 @@ function showAllFloorCards() {
 			
 		case GAME_TURN:
 			dealTurnCards();
-			count = 3;
 			break;
 			
 		case GAME_RIVER:
 			dealRiverCards();	
-			count = 4;
+			break;
+			
+		default:
+			showAll(true);
 			break;
 	}
 	
-	showAll(count);
-	
-	function showAll(count) {
+	function showAll(visible, count) {
 		for(var index = 0; index < game.floor.cards.length; index++) {
-			if(index == count) break;
-			
-			if(index <= 2) showFlopCard(true, index);
-			else if(index == 3) showTurnCard(true);
-			else if(index == 4) showRiverCard(true);
+			if(count && index == count) break;
+			showFloorCard(visible, index);
 		}
 	}
 	
 	function dealFlopCards() {
-		if(game.status != GAME_FLOP) return false;
-		
-		var cardIndex = 0;
-		
-		var timer = setInterval(function() {
-			showFlopCard(true, cardIndex++);
-			
-			if(cardIndex == 3) clearInterval(timer);
-		}, DEALING_FLOOR_INTERVAL);
+		animate(0, 2);
 	}
 	
 	function dealTurnCards() {
-		if(game.status != GAME_TURN) return false;
-		
-		var cardIndex = 0;
-		
-		var timer = setInterval(function() {
-			showTurnCard(true);
-			clearInterval(timer);
-		}, DEALING_FLOOR_INTERVAL);
+		showAll(true, 3);
+		animate(3, 3);
 	}
 	
 	function dealRiverCards() {
-		if(game.status != GAME_RIVER) return false;
-		
-		var cardIndex = 0;
+		showAll(true, 4);
+		animate(4, 4);
+	}
+	
+	function animate(startIndex, endIndex) {
+		var cardIndex = startIndex;
 		
 		var timer = setInterval(function() {
-			showRiverCard(true);
-			clearInterval(timer);
+			showFloorCard(true, cardIndex++);
+			if(cardIndex > endIndex) clearInterval(timer);
 		}, DEALING_FLOOR_INTERVAL);
 	}
 }
@@ -344,11 +333,7 @@ function initTable() {
 	showAllPlayerCards(false);
 	showAllPlayerTimers(false);
 	showAllPlayerDealerButtons(false);
-	
-	showAllFlopCards(false);
-	showTurnCard(false);
-	showRiverCard(false);
-	showFloorChip(false);
+	showAllFloorCards(false);
 }
 
 // ----------------------------------------
@@ -476,35 +461,14 @@ function showPlayerDealerButton(seat, visible) {
 	document.querySelector(".seat" + seat + " .dealerbutton").style.display = visible ? "flex" : "none";
 }
 
-function showAllFlopCards(visible) {
-	showFlopCard(visible, 0);
-	showFlopCard(visible, 1);
-	showFlopCard(visible, 2);
-}
-
-function showFlopCard(visible, cardIndex) {
+function showFloorCard(visible, cardIndex) {
 	var cards = game.floor.cards;
+	
+	if(cardIndex < 0 || cardIndex >= cards.length) return;
+	
 	var cardFile = getCardFile(cards[cardIndex].number, cards[cardIndex].shape);
 	
-	var card = document.querySelector(".flop .card" + cardIndex);
-	card.style.display = visible ? "inline-flex" : "none";
-	card.setAttribute( 'src', 'image/' + cardFile);
-}
-
-function showTurnCard(visible) {
-	var cards = game.floor.cards;
-	var cardFile = getCardFile(cards[3].number, cards[3].shape);
-	
-	var card = document.querySelector(".turn .card");
-	card.style.display = visible ? "inline-flex" : "none";
-	card.setAttribute( 'src', 'image/' + cardFile);
-}
-
-function showRiverCard(visible) {
-	var cards = game.floor.cards;
-	var cardFile = getCardFile(cards[4].number, cards[4].shape);
-	
-	var card = document.querySelector(".river .card");
+	var card = document.querySelector(".cards-on-floor .card" + cardIndex);
 	card.style.display = visible ? "inline-flex" : "none";
 	card.setAttribute( 'src', 'image/' + cardFile);
 }
