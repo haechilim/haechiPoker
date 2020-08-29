@@ -25,137 +25,7 @@ var DIAMOND = 1;
 var HEART = 2;
 var CLUB = 3;
 
-var game = {
-	code: CODE_SUCCESS,
-	status: GAME_RIVER,
-	dealer: 3,
-	actor: 2,
-	floor: {
-		pot: 300,
-		cards: [
-			{
-				shape: CLUB,
-				number: 14
-			},
-			{
-				shape: HEART,
-				number: 13
-			},
-			{
-				shape: HEART,
-				number: 4
-			},
-			{
-				shape: DIAMOND,
-				number: 8
-			}
-			,
-			{
-				shape: DIAMOND,
-				number: 9
-			}
-		]
-	},
-	betting: {
-		min: 100,
-		call: 200
-	},
-	players: [
-		{
-			id: 0,
-			avatar: 1,
-			seat: 6,
-			name: "해치",
-			chip: 30000,
-			betting: 100,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 1,
-			avatar: 3,
-			seat: 2,
-			name: "장삐쭈",
-			chip: 15000,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 2,
-			avatar: 9,
-			seat: 8,
-			name: "삐쭈",
-			chip: 15000000,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 3,
-			avatar: 11,
-			seat: 4,
-			name: "김아빠",
-			chip: 99999,
-			cards: [
-				{
-					shape: SPADE,
-					number: 11
-				},
-				{
-					shape: SPADE,
-					number: 13
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 4,
-			avatar: 11,
-			seat: 7,
-			name: "임뽕구",
-			chip: 1500000,
-			betting: 200,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		}
-	]
-};
-
+var game = {};
 var dealerIndex = 0;
 var turn;
 var bettingTimer;
@@ -163,7 +33,7 @@ var bettingTimer;
 document.addEventListener("DOMContentLoaded", function() {
 	init();
 	bindEvents();
-	updateTable();
+	requestGameData();
 });
 
 function nextGame() {
@@ -222,8 +92,11 @@ function showAllFloorCards(visible) {
 	}
 	
 	function showAll(visible, count) {
-		for(var index = 0; index < game.floor.cards.length; index++) {
+		var length = visible ? game.floor.cards.length : 5;
+		
+		for(var index = 0; index < length; index++) {
 			if(count && index == count) break;
+			if(visible) updateFloorCard(index);
 			showFloorCard(visible, index);
 		}
 	}
@@ -246,6 +119,7 @@ function showAllFloorCards(visible) {
 		var cardIndex = startIndex;
 		
 		var timer = setInterval(function() {
+			updateFloorCard(cardIndex);
 			showFloorCard(true, cardIndex++);
 			
 			if(cardIndex > endIndex) {
@@ -335,7 +209,6 @@ function passDealerButton() {
 function init() {
 	resize();
 	initTable();
-	sortPlayersBySeat();
 }
 
 function initTable() {
@@ -384,8 +257,16 @@ function bindEvents() {
 	});
 	
 	document.querySelector('#fold').addEventListener('click', function() {
-		nextGame();
-		resetTable();
+		var xhr = new XMLHttpRequest();
+		
+		xhr.onload = function() {
+			if(xhr.status == 200) {
+				game = JSON.parse(xhr.responseText);
+			}
+		};
+		
+		xhr.open("GET", "gamedata", true);
+		xhr.send();
 	});
 	
 	document.querySelector('#call').addEventListener('click', function() {
@@ -393,6 +274,23 @@ function bindEvents() {
 		showBettingTimer();
 		startPlayerTimer();
 	});
+}
+
+// ----------------------------------------
+
+function requestGameData() {
+	var xhr = new XMLHttpRequest();
+	
+	xhr.onload = function() {
+		if(xhr.status == 200) {
+			game = JSON.parse(xhr.responseText);
+			sortPlayersBySeat();
+			updateTable();
+		}
+	};
+	
+	xhr.open("GET", "gamedata", true);
+	xhr.send();
 }
 
 // ----------------------------------------
@@ -484,15 +382,17 @@ function showPlayerDealerButton(seat, visible) {
 }
 
 function showFloorCard(visible, cardIndex) {
+	document.querySelector(".cards-on-floor .card" + cardIndex).style.display = visible ? "inline-flex" : "none";
+}
+
+function updateFloorCard(cardIndex) {
 	var cards = game.floor.cards;
 	
 	if(cardIndex < 0 || cardIndex >= cards.length) return;
 	
 	var cardFile = getCardFile(cards[cardIndex].number, cards[cardIndex].shape);
 	
-	var card = document.querySelector(".cards-on-floor .card" + cardIndex);
-	card.style.display = visible ? "inline-flex" : "none";
-	card.setAttribute( 'src', 'image/' + cardFile);
+	document.querySelector(".cards-on-floor .card" + cardIndex).setAttribute( 'src', 'image/' + cardFile);
 }
 
 function showFloorChip(visible) {
