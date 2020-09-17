@@ -12,6 +12,11 @@ var JOIN_SUCCESS = 0;
 var JOIN_FULL = 1;
 var JOIN_ALREADY_EXISTS = 2;
 
+// 응답코드 (Response Code)
+var RC_SUCCESS = 0;
+var RC_NOT_YOUR_TURN = 1;
+var RC_NO_PERMISSION = 2;
+
 // 플레이어 상태
 var PLAYER_PLAYING = 0;
 var PLAYER_SITTING_OUT = 1;
@@ -220,9 +225,9 @@ function init() {
 	resize();
 	initTable();
 	requestJoin(function(json) {
+		if(json.code != JOIN_SUCCESS) return;
 		console.log(json);
 		myId = json.id;
-		if(json.code != JOIN_SUCCESS) return;
 		setInterval(requestGameData, GAME_DATA_REQUEST_INTERVAL);
 	});
 }
@@ -281,6 +286,12 @@ function bindEvents() {
 		showBettingTimer();
 		startPlayerTimer();
 	});
+
+	document.querySelector('#potButton').addEventListener('click', function() {
+		requestStart(function() {
+
+		});
+	});
 }
 
 // ----------------------------------------
@@ -302,6 +313,10 @@ function requestGameData() {
 
 function requestJoin(callback) {
 	request("/join" + location.search, callback);
+}
+
+function requestStart(callback) {
+	request("/start?id=" + myId, callback);
 }
 
 // ----------------------------------------
