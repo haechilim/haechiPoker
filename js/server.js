@@ -2,9 +2,16 @@ var http = require("http");
 var fs = require("fs");
 var mime = require("mime");
 
+var MAX_PLAYER = 9;
+
 // 에러 코드
 var CODE_SUCCESS = 0;
 var CODE_NOT_YOUR_TURN = 1;
+
+// 참가요청에 대한 응답코드
+var JOIN_SUCCESS = 0;
+var JOIN_FULL = 1;
+var JOIN_ALREADY_EXISTS = 2;
 
 // 플레이어 상태
 var PLAYER_PLAYING = 0;
@@ -17,6 +24,7 @@ var GAME_FLOP = 2;
 var GAME_TURN = 3;
 var GAME_RIVER = 4;
 var GAME_RESULT = 5;
+var GAME_WAITING = 6;
 
 // 카드 모양
 var SPADE = 0;
@@ -26,7 +34,7 @@ var CLUB = 3;
 
 var game = {
 	code: CODE_SUCCESS,
-	status: GAME_FLOP,
+	status: GAME_WAITING,
 	dealer: 3,
 	actor: 2,
 	floor: {
@@ -47,8 +55,7 @@ var game = {
 			{
 				shape: DIAMOND,
 				number: 8
-			}
-			,
+			},
 			{
 				shape: DIAMOND,
 				number: 9
@@ -59,132 +66,128 @@ var game = {
 		min: 100,
 		call: 200
 	},
-	players: [
-		{
-			id: 0,
-			avatar: 1,
-			seat: 6,
-			name: "해치",
-			chip: 30000,
-			betting: 100,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 1,
-			avatar: 3,
-			seat: 2,
-			name: "장삐쭈",
-			chip: 15000,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 2,
-			avatar: 9,
-			seat: 8,
-			name: "삐쭈",
-			chip: 15000000,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 3,
-			avatar: 11,
-			seat: 4,
-			name: "김아빠",
-			chip: 99999,
-			cards: [
-				{
-					shape: SPADE,
-					number: 11
-				},
-				{
-					shape: SPADE,
-					number: 13
-				}
-			],
-			status: PLAYER_PLAYING
-		},
-		{
-			id: 4,
-			avatar: 11,
-			seat: 7,
-			name: "임뽕구",
-			chip: 1500000,
-			betting: 200,
-			cards: [
-				{
-					shape: SPADE,
-					number: 0
-				},
-				{
-					shape: HEART,
-					number: 0
-				}
-			],
-			status: PLAYER_PLAYING
-		}
-	]
+	players: []
 };
 
+var id = 0;
+
+// ----------------------------------------
+
+function join(parameter) {
+	var code = JOIN_SUCCESS;
+
+	if(game.players.length > MAX_PLAYER) code = JOIN_FULL
+	else {
+		var player = {
+			id: id,
+			name: parameter.name,
+			avatar: parameter.avatar,
+			seat: parameter.seat,
+			chip: 0,
+			betting: 0,
+			cards: [],
+			status: PLAYER_PLAYING
+		}
+
+		game.players.push(player);
+	}	
+
+	return {
+		code: code,
+		id: id++
+	};
+}
+
+// ----------------------------------------
+
 var server = http.createServer(function(request, response) {
-	if(request.url == "/gamedata") {
-		response.writeHead(200, {
-			"Content-Type": "application/json; charset=utf-8"
-		});
-		
-		response.end(JSON.stringify(game));
-		return;
-	}
+	console.log("요청 URL: ", request.url);
+
+	var urlPath = getUrlPath(request.url);
+	var filepath = getFilePath(urlPath);
+	var contentType = mime.getType(filepath);
+	var parameter = getUrlParameters(request.url);
+
+	if(urlPath == "/gamedata") jsonResponse(response, game);
+	else if(urlPath == "/join") jsonResponse(response, join(parameter));
 	
-	var path = request.url == "/" ? "poker.html" : request.url.substr(1);
-	var contentType = mime.getType(path);
-	var binary = isBinary(contentType);
+	if(isText(contentType))	fs.readFile(filepath, "utf-8", content);
+	else fs.readFile(filepath, content);
 	
-	if(binary) fs.readFile(path, handleFile);
-	else fs.readFile(path, "UTF-8", handleFile);
-	
-	function handleFile(error, data) {
-		response.writeHead(200, {
-			"Content-Type": contentType + (binary ? "" : "; charset=utf-8")
-		});
-		
-		response.end(data);
+	function content(error, data) {
+		if(error) {
+			response.writeHead(404, {
+				"content-type": "text/plain; charset=utf-8"
+			});
+				
+			response.end("File Not Found");
+		}
+		else {
+			response.writeHead(200, {
+				"content-type": contentType + (isText(contentType) ? "; charset=utf-8" : ""),
+				"cache-control": isText(contentType) ? "no-cache" : "max-age=31536000"
+			});
+				
+			response.end(data);
+		}
 	}
 });
 
 server.listen(8888);
-
 console.log("나 듣고 있다!");
+
+// ----------------------------------------
+
+function jsonResponse(response, data) {
+	response.writeHead(200, {
+		"content-type": "application/json; charset=utf-8",
+		"cache-control": "no-cache"
+	});
+		
+	response.end(JSON.stringify(data));
+}
+
+// ----------------------------------------
+
+function getUrlPath(url) {
+	var index = url.indexOf("?");
+	return index < 0 ? url : url.substr(0, index);
+}
+
+function getUrlParameters(url) {
+	var result = {};
+	var part = parameterPart();
+	var parameters = part.split("&");
+	
+	for(var i = 0; i < parameters.length; i++) {
+		var tokens = parameters[i].split("=");
+		
+		if(tokens.length < 2) continue;
+		
+		result[tokens[0]] = tokens[1];
+	}
+	
+	return result;
+	
+	
+function parameterPart() {
+		var tokens = url.split("?");
+		return tokens.length > 1 ? tokens[1] : "";
+	}
+}
+
+function getFilePath(urlPath) {
+	if(urlPath == "/") return "poker.html";
+	
+	return urlPath.substr(1, urlPath.length - 1);
+}
+
+// ----------------------------------------
 
 function isBinary(type) {
 	return !(type.startsWith("text") || type == "application/javascript");
+}
+
+function isText(contentType) {
+	return contentType == "text/html" || contentType == "text/css" || contentType == "application/javascript";
 }

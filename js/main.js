@@ -7,6 +7,11 @@ var BETTING_TIMEOUT = 8;
 var CODE_SUCCESS = 0;
 var CODE_NOT_YOUR_TURN = 1;
 
+// 참가요청에 대한 응답코드
+var JOIN_SUCCESS = 0;
+var JOIN_FULL = 1;
+var JOIN_ALREADY_EXISTS = 2;
+
 // 플레이어 상태
 var PLAYER_PLAYING = 0;
 var PLAYER_SITTING_OUT = 1;
@@ -24,6 +29,11 @@ var SPADE = 0;
 var DIAMOND = 1;
 var HEART = 2;
 var CLUB = 3;
+
+// 게임 데이터 요청 주기
+var GAME_DATA_REQUEST_INTERVAL = 1000;
+
+var myId;
 
 var game = {};
 var dealerIndex = 0;
@@ -209,6 +219,12 @@ function passDealerButton() {
 function init() {
 	resize();
 	initTable();
+	requestJoin(function(json) {
+		console.log(json);
+		myId = json.id;
+		if(json.code != JOIN_SUCCESS) return;
+		setInterval(requestGameData, GAME_DATA_REQUEST_INTERVAL);
+	});
 }
 
 function initTable() {
@@ -253,20 +269,11 @@ function stopBettingTimer() {
 
 function bindEvents() {
 	window.addEventListener('resize', function() {
-		resize();
+		init();
 	});
 	
 	document.querySelector('#fold').addEventListener('click', function() {
-		var xhr = new XMLHttpRequest();
-		
-		xhr.onload = function() {
-			if(xhr.status == 200) {
-				game = JSON.parse(xhr.responseText);
-			}
-		};
-		
-		xhr.open("GET", "gamedata", true);
-		xhr.send();
+		requestGameData();
 	});
 	
 	document.querySelector('#call').addEventListener('click', function() {
@@ -290,6 +297,24 @@ function requestGameData() {
 	};
 	
 	xhr.open("GET", "gamedata", true);
+	xhr.send();
+}
+
+function requestJoin(callback) {
+	request("/join" + location.search, callback);
+}
+
+// ----------------------------------------
+
+function request(url, callback) {
+	var xhr = new XMLHttpRequest();
+		
+	xhr.addEventListener("load", function() {
+		var json = JSON.parse(xhr.responseText);
+		if(callback) callback(json);
+	});
+	
+	xhr.open("GET", url, true);
 	xhr.send();
 }
 
