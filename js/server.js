@@ -138,6 +138,33 @@ function start(parameter) {
 		setDealer();
 		setSmallBlind();
 		setBigBlind();
+		dealCards();
+	}
+
+	return {
+		code: code
+	};
+}
+
+function betting() {
+	game.status = GAME_BETTING;
+
+	setActor();
+
+	return { code: RC_SUCCESS }
+}
+
+function fold(parameter) {
+	var code = RC_SUCCESS;
+	var player = getPlayerById(parameter.id);
+
+	if(gmae.actor != player.seat) code = RC_NOT_YOUR_TURN;
+	else if(game.status != GAME_BETTING) code = RC_NO_PERMISSION;
+	else {
+		
+		setDealer();
+		setSmallBlind();
+		setBigBlind();
 		setActor();
 		dealCards();
 	}
@@ -191,19 +218,19 @@ function setDealer() {
 
 function setSmallBlind() {
 	game.smallBlind = getNextParsonSeat(1);
-	betting(getPlayerBySeat(game.smallBlind), game.betting.min / 2);
+	bet(getPlayerBySeat(game.smallBlind), game.betting.min / 2);
 }
 
 function setBigBlind() {
 	game.bigBlind = getNextParsonSeat(2);
-	betting(getPlayerBySeat(game.bigBlind), game.betting.min);
+	bet(getPlayerBySeat(game.bigBlind), game.betting.min);
 }
 
 function setActor() {
 	game.actor = getNextParsonSeat(3);
 }
 
-function betting(player, cost) {
+function bet(player, cost) {
 	if(player.chip < cost) cost = player.chip;
 
 	game.floor.pot += cost;
@@ -312,7 +339,11 @@ var server = http.createServer(function(request, response) {
 			return;
 
 		case "/betting":
-			jsonResponse(response, betting(parameter));
+			jsonResponse(response, betting());
+			return;
+
+		case "/fold":
+			jsonResponse(response, fold(parameter));
 			return;
 	}
 	

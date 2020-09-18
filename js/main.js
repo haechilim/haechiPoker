@@ -279,7 +279,9 @@ function bindEvents() {
 	});
 	
 	document.querySelector('#fold').addEventListener('click', function() {
-		requestGameData();
+		requestBetting(function() {
+			
+		});
 	});
 	
 	document.querySelector('#call').addEventListener('click', function() {
@@ -291,8 +293,10 @@ function bindEvents() {
 	document.querySelector('#potButton').addEventListener('click', function() {
 		requestStart(function(json) {
 			if(json.code == RC_SUCCESS) {
-				requestGameData();
-				initTable();
+				//requestBetting(function() {
+					requestGameData();
+					initTable();
+				//});
 			}
 		});
 	});
@@ -322,6 +326,14 @@ function requestJoin(callback) {
 
 function requestStart(callback) {
 	request("/start?id=" + myId, callback);
+}
+
+function requestBetting(callback) {
+	request("/betting", callback);
+}
+
+function requestFold(callback) {
+	request("/fold?id=" + myId, callback);
 }
 
 // ----------------------------------------
