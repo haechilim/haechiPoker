@@ -65,7 +65,7 @@ function nextTurn() {
 }
 
 function resetTable() {
-	showAllPlayerCards(false);
+	req
 	passDealerButton();
 }
 
@@ -163,7 +163,7 @@ function updatePlayers() {
 	
 	if(game.status == GAME_PRE_FLOP) showAllPlayerCards(true);
 	
-	showPlayerDealerButton(getPlayer(game.dealer).seat, true);
+	if(getPlayer(game.dealer) != null) showPlayerDealerButton(getPlayer(game.dealer).seat, true);
 }
 
 function updatePlayer(player) {
@@ -225,9 +225,9 @@ function init() {
 	resize();
 	initTable();
 	requestJoin(function(json) {
-		if(json.code != JOIN_SUCCESS) return;
 		console.log(json);
 		myId = json.id;
+		if(json.code == JOIN_FULL) return;
 		setInterval(requestGameData, GAME_DATA_REQUEST_INTERVAL);
 	});
 }
@@ -274,7 +274,8 @@ function stopBettingTimer() {
 
 function bindEvents() {
 	window.addEventListener('resize', function() {
-		init();
+		resize();
+		initTable();
 	});
 	
 	document.querySelector('#fold').addEventListener('click', function() {
@@ -288,8 +289,11 @@ function bindEvents() {
 	});
 
 	document.querySelector('#potButton').addEventListener('click', function() {
-		requestStart(function() {
-
+		requestStart(function(json) {
+			if(json.code == RC_SUCCESS) {
+				requestGameData();
+				initTable();
+			}
 		});
 	});
 }
@@ -302,12 +306,13 @@ function requestGameData() {
 	xhr.onload = function() {
 		if(xhr.status == 200) {
 			game = JSON.parse(xhr.responseText);
+			console.log(game);
 			sortPlayersBySeat();
 			updateTable();
 		}
 	};
 	
-	xhr.open("GET", "gamedata", true);
+	xhr.open("GET", "gamedata?id=" + myId, true);
 	xhr.send();
 }
 
@@ -453,11 +458,13 @@ function updateProgressStatus(progress, percent) {
 	progress.style.width = percent + "%";
 }
 
-function getPlayer(id) {
-	var players = game.players;
-	
-	for(var i = 0; i < players.length; i++) {
-		if(players[i].id == id) return players[i];
+function getPlayer(seat) {
+	if(seat != -1) {
+		var players = game.players;
+		
+		for(var i = 0; i < players.length; i++) {
+			if(players[i].seat == seat) return players[i];
+		}
 	}
 	
 	return null;
