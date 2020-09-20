@@ -3,31 +3,25 @@ var CARDS_DEALING_INTERVAL = 100;
 var DEALING_FLOOR_INTERVAL = 500;
 var BETTING_TIMEOUT = 8;
 
-// 에러 코드
-var CODE_SUCCESS = 0;
-var CODE_NOT_YOUR_TURN = 1;
-
-// 참가요청에 대한 응답코드
-var JOIN_SUCCESS = 0;
-var JOIN_FULL = 1;
-var JOIN_ALREADY_EXISTS = 2;
-
 // 응답코드 (Response Code)
 var RC_SUCCESS = 0;
 var RC_NOT_YOUR_TURN = 1;
 var RC_NO_PERMISSION = 2;
+var RC_FULL = 3;
+var RC_ALREADY_EXISTS = 4;
 
 // 플레이어 상태
-var PLAYER_PLAYING = 0;
-var PLAYER_SITTING_OUT = 1;
+var PS_PLAYING = 0;
+var PS_SITTING_OUT = 1;
 
 // 게임 상태
-var GAME_BETTING = 0;
-var GAME_PRE_FLOP = 1;
-var GAME_FLOP = 2;
-var GAME_TURN = 3;
-var GAME_RIVER = 4;
-var GAME_RESULT = 5;
+var GS_BETTING = 0;
+var GS_PRE_FLOP = 1;
+var GS_FLOP = 2;
+var GS_TURN = 3;
+var GS_RIVER = 4;
+var GS_RESULT = 5;
+var GS_WAITING = 6;
 
 // 카드 모양
 var SPADE = 0;
@@ -36,9 +30,10 @@ var HEART = 2;
 var CLUB = 3;
 
 // 게임 데이터 요청 주기
-var GAME_DATA_REQUEST_INTERVAL = 1000;
+var DATA_REQUEST_INTERVAL = 1000;
 
 var myId;
+var sequece = -1;
 
 var game = {};
 var dealerIndex = 0;
@@ -48,7 +43,6 @@ var bettingTimer;
 document.addEventListener("DOMContentLoaded", function() {
 	init();
 	bindEvents();
-	requestGameData();
 });
 
 function nextGame() {
@@ -84,23 +78,23 @@ function showAllFloorCards(visible) {
 	}
 	
 	switch(game.status) {
-		case GAME_PRE_FLOP:
+		case GS_PRE_FLOP:
 			showAll(true);
 			break;
 		
-		case GAME_FLOP:
+		case GS_FLOP:
 			dealFlopCards();
 			break;
 			
-		case GAME_TURN:
+		case GS_TURN:
 			dealTurnCards();
 			break;
 			
-		case GAME_RIVER:
+		case GS_RIVER:
 			dealRiverCards();	
 			break;
 			
-		case GAME_BETTING:
+		case GS_BETTING:
 			showAll(true);
 			startBettingTimer();
 			break;
@@ -157,11 +151,9 @@ function updatePlayers() {
 		
 		showPlayer(player.seat, true);
 		showPlayerChip(player.seat, player.betting > 0, player.betting);
-		
-		if(game.status != GAME_PRE_FLOP) showPlayerCards(player.seat, true);
 	}
 	
-	if(game.status == GAME_PRE_FLOP) showAllPlayerCards(true);
+	if(game.status != GS_WAITING) showAllPlayerCards(true);
 	
 	if(getPlayer(game.dealer) != null) showPlayerDealerButton(getPlayer(game.dealer).seat, true);
 }
@@ -227,8 +219,9 @@ function init() {
 	requestJoin(function(json) {
 		console.log(json);
 		myId = json.id;
-		if(json.code == JOIN_FULL) return;
-		setInterval(requestGameData, GAME_DATA_REQUEST_INTERVAL);
+		if(json.code == RC_FULL) return;
+		requestGameData();
+		setInterval(requestGameData, DATA_REQUEST_INTERVAL);
 	});
 }
 
@@ -246,8 +239,8 @@ function initTable() {
 
 function startBettingTimer() {
 	setTimeout(function() {
-		showPlayerTimer(getPlayer(game.actor).seat, true);
-		startPlayerTimer();
+		//showPlayerTimer(getPlayer(game.actor).seat, true);
+		//startPlayerTimer();
 	}, DEALING_FLOOR_INTERVAL);
 }
 
@@ -305,19 +298,12 @@ function bindEvents() {
 // ----------------------------------------
 
 function requestGameData() {
-	var xhr = new XMLHttpRequest();
-	
-	xhr.onload = function() {
-		if(xhr.status == 200) {
-			game = JSON.parse(xhr.responseText);
-			console.log(game);
-			sortPlayersBySeat();
-			updateTable();
-		}
-	};
-	
-	xhr.open("GET", "gamedata?id=" + myId, true);
-	xhr.send();
+	request("gamedata?id=" + myId, function(data) {
+		if(sequece >= data.sequece) return;
+		sequece = data.sequece;
+		game = data;
+		updateTable();
+	});
 }
 
 function requestJoin(callback) {
@@ -335,8 +321,6 @@ function requestBetting(callback) {
 function requestFold(callback) {
 	request("/fold?id=" + myId, callback);
 }
-
-// ----------------------------------------
 
 function request(url, callback) {
 	var xhr = new XMLHttpRequest();
@@ -371,7 +355,7 @@ function showAllPlayerChips(visible) {
 }
 
 function showAllPlayerCards(visible) {
-	if(game.status == GAME_PRE_FLOP && visible) animate();
+	if(game.status == GS_PRE_FLOP && visible) animate();
 	else {
 		for(var seat = 0; seat < TOTAL_SEATS; seat++) {
 			showPlayerCards(seat, visible);
@@ -382,6 +366,8 @@ function showAllPlayerCards(visible) {
 		var playerIndex = 0;
 		var cardIndex = 1;
 		var players = game.players;
+
+		showAllPlayerCards(false);
 		
 		var timer = setInterval(function() {
 			showPlayerCard(players[playerIndex++].seat, cardIndex, true);
